@@ -6,23 +6,23 @@ import 'package:flutter/services.dart';
 class PayuMoneyFlutter {
   static const MethodChannel _channel =
       const MethodChannel('payu_money_flutter');
-  String _merchantKey;
-  String _merchantID;
+  String? _merchantKey;
+  String? _merchantID;
   bool _isProduction = false;
 
   Future<bool> setupPaymentKeys(
-      {@required String merchantKey,
-      @required String merchantID,
-      @required bool isProduction,
-      @required String activityTitle,
-      @required bool disableExitConfirmation}) async {
-    bool response = await _channel.invokeMethod("setupDetails", {
+      {required String merchantKey,
+      required String merchantID,
+      required bool isProduction,
+      required String activityTitle,
+      required bool disableExitConfirmation}) async {
+    bool response = await (_channel.invokeMethod("setupDetails", {
       "merchantKey": merchantKey,
       "merchantID": merchantID,
       "isProduction": isProduction,
       "activityTitle": activityTitle,
       "disableExitConfirmation": disableExitConfirmation,
-    });
+    }) as FutureOr<bool>);
     if (response) {
       _merchantID = merchantID;
       _merchantKey = merchantKey;
@@ -32,13 +32,13 @@ class PayuMoneyFlutter {
   }
 
   Future<dynamic> startPayment(
-      {@required String txnid,
-      @required String amount,
-      @required String name,
-      @required String email,
-      @required String phone,
-      @required String productName,
-      @required String hash}) async {
+      {required String txnid,
+      required String amount,
+      required String name,
+      required String email,
+      required String phone,
+      required String productName,
+      required String hash}) async {
     try {
       var data = await _channel.invokeMethod("startPayment", {
         "txnid": txnid,
